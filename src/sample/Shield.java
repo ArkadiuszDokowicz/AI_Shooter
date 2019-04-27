@@ -27,62 +27,52 @@ public class Shield {
 
 
 
+
    public void rateShots(List<Point> shots){
        for(Point point:shots){
            this.rateShot(point);
        }
    }
+    static boolean isInside(double circle_x, double circle_y,int rad, double x, double y)
+    {
+        // Compare radius of circle with
+        // distance of its center from
+        // given point
+        if ((x - circle_x) * (x - circle_x) +
+                (y - circle_y) * (y - circle_y) <= rad * rad)
+            return true;
+        else
+            return false;
+    }
 
-   private void rateShot(Point point){
+    private void rateShot(Point point){
        double pointLayoutX=point.getEllipse().getLayoutX();
        double pointLayoutY=point.getEllipse().getLayoutY();
-
-       if(between(pointLayoutX,layoutX-rad1,layoutX+rad1)){
-           if(between(pointLayoutY,layoutY-rad1,layoutY+rad1)){
-               point.setValue(10);
-           }
+       if(isInside(layoutX,layoutY,rad1,pointLayoutX,pointLayoutY)){
+           point.setValue(10);
        }
-       else if(between(pointLayoutX,layoutX-rad2,layoutX+rad2)){
-           if(between(pointLayoutY,layoutY-rad2,layoutY+rad2)){
-               point.setValue(9);
-           }
-
+       else if(isInside(layoutX,layoutY,rad2,pointLayoutX,pointLayoutY)){
+            point.setValue(9);
+        }
+       else if(isInside(layoutX,layoutY,rad3,pointLayoutX,pointLayoutY)){
+           point.setValue(8);
        }
-       else if(between(pointLayoutX,layoutX-rad3,layoutX+rad3)){
-           if(between(pointLayoutY,layoutY-rad3,layoutY+rad3)){
-               point.setValue(8);
-           }
-
+       else if(isInside(layoutX,layoutY,rad4,pointLayoutX,pointLayoutY)){
+           point.setValue(7);
        }
-       else if(between(pointLayoutX,layoutX-rad4,layoutX+rad4)){
-           if(between(pointLayoutY,layoutY-rad4,layoutY+rad4)){
-               point.setValue(7);
-           }
-
+       else if(isInside(layoutX,layoutY,rad5,pointLayoutX,pointLayoutY)){
+           point.setValue(5);
        }
-       else if(between(pointLayoutX,layoutX-rad5,layoutX+rad5)){
-           if(between(pointLayoutY,layoutY-rad5,layoutY+rad5)){
-               point.setValue(5);
-           }
-
+       else if(isInside(layoutX,layoutY,rad6,pointLayoutX,pointLayoutY)){
+           point.setValue(3);
        }
-       else if(between(pointLayoutX,layoutX-rad6,layoutX+rad6)){
-           if(between(pointLayoutY,layoutY-rad6,layoutY+rad6)){
-               point.setValue(3);
-           }
-
+       else if(isInside(layoutX,layoutY,rad7,pointLayoutX,pointLayoutY)){
+           point.setValue(2);
        }
-       else if(between(pointLayoutX,layoutX-rad7,layoutX+rad7)){
-
-               point.setValue(2);
-
+       else if(isInside(layoutX,layoutY,rad8,pointLayoutX,pointLayoutY)){
+           point.setValue(1);
        }
-       else if(between(pointLayoutX,layoutX-rad8,layoutX+rad8)){
-           if(between(pointLayoutY,layoutY-rad8,layoutY+rad8)){
-               point.setValue(1);
-           }
-
-       }
+       else{point.setValue(0);}
 
    }
    private boolean between(double i, double minValueInclusive, double maxValueInclusive) {

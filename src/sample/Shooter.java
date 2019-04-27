@@ -6,11 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Shooter {
+public class Shooter extends geneticAlgorithm {
     private List<Point> shots = new ArrayList();
     Shield shield=new Shield();
-    Shooter(List<Point> list){
+    Shooter(List<Point> list,int tolerance, int mutation){
+        super(tolerance,mutation);
         this.shots=list;
+
     }
 
     public void firstShootingRound(){
@@ -19,11 +21,18 @@ public class Shooter {
         double rangeMax=400;
         for( Point shot:shots) {
             Double randomX  =rangeMin + (rangeMax - rangeMin) * rand.nextDouble();
-            System.out.println(randomX);
+           // System.out.println(randomX);
             Double randomY  =rangeMin + (rangeMax - rangeMin) * rand.nextDouble();
-            System.out.println(randomY);
+           // System.out.println(randomY);
             EllipseService.setPosition(shot.getEllipse(), randomX, randomY, 3, 3);
         }
+    }
+
+    public void nextShootingRound(){
+        this.checkTheResults();
+        this.setParents(this.shots);
+        this.crossover(this.shots);
+        this.mutation(this.shots);
     }
     public void checkTheResults(){
     shield.rateShots(shots);
@@ -33,7 +42,9 @@ public class Shooter {
         for(Point point:shots){
             System.out.print(point.getValue()+" ");
         }
+        System.out.println();
     }
+
     public Point getPointById(String id){
         Point point = null;
 

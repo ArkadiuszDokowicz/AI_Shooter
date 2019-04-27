@@ -2,7 +2,7 @@ package sample;
 
 import javafx.scene.shape.Ellipse;
 
-public class Point {
+public class Point implements Comparable<Point>  {
     private String name;
     private Ellipse ellipse;
     private int value;
@@ -36,4 +36,12 @@ public class Point {
     public void setValue(int value) {
         this.value = value;
     }
+
+    @Override
+    public int compareTo(Point obj) {
+        int compareage=((Point)obj).getValue();
+        /* For Ascending order*/
+        return compareage-this.getValue();
+    }
 }
+
