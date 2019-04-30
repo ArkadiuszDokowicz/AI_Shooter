@@ -27,6 +27,6 @@
       </AnchorPane>
    </children>
    <bottom>
-      <Label fx:id="label" prefHeight="30.0" prefWidth="203.0" text="" BorderPane.alignment="CENTER" />
+      <Label fx:id="label" prefHeight="30.0" prefWidth="153.0" text="" BorderPane.alignment="CENTER" />
    </bottom>
 </BorderPane>

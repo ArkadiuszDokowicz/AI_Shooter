@@ -1,9 +1,12 @@
 package sample;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -17,7 +20,7 @@ import java.util.List;
 
 public class Controller   {
 
-    private int probe =50;
+    private static int probe =100;
 
 
     @FXML
@@ -29,8 +32,9 @@ public class Controller   {
 
     private volatile int generationCounter=0;
     private List<Point> shots = new ArrayList();
-    private Shooter shooter=new Shooter(shots,10,1);;
+    private Shooter shooter=new Shooter(shots,10,2);
     private boolean firstShootingRound= true;
+
 
     public void shootingButton(ActionEvent event){
         generationCounter++;
@@ -49,23 +53,67 @@ public class Controller   {
 
         }
     }
+
     public void shootingButton2(ActionEvent event) {
-        generationCounter=0;
+        this.generationCounter=0;
+        this.label.setText("Generation :"+this.generationCounter);
         for( Point shot:shots) {
             EllipseService.hidePoint(shot.getEllipse());
             firstShootingRound=true;
         }
     }
 
+    private void setPopulation(int value){
+        this.probe=value;
+        System.out.println(this.probe);
+    };
+    private void PopulationSliderInitialize(){
+
+        final Slider populationSlider = new Slider();
+        populationSlider.setMin(20);
+        populationSlider.setMax(100);
+        populationSlider.setValue(40);
+        populationSlider.setShowTickLabels(true);
+        populationSlider.setShowTickMarks(true);
+        populationSlider.setMajorTickUnit(50);
+        populationSlider.setMinorTickCount(5);
+        populationSlider.setBlockIncrement(10);
+        populationSlider.setLayoutX(200);
+        populationSlider.setLayoutY(400);
+        populationSlider.addEventFilter(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                setPopulation((int)populationSlider.getValue());
+                shootsInitialize();
+            }
+        });
+
+        final Label populationCaption = new Label("Population:");
+        final Label populationValue = new Label(
+                Double.toString(populationSlider.getValue()));
 
 
-    public void initialize() {
+        populationCaption.setLayoutX(populationSlider.getLayoutX()-80);populationCaption.setLayoutY(400);
+        populationSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            public synchronized void changed(ObservableValue<? extends Number> ov,Number old_val, Number new_val) {
+                Double value= (Double) new_val;
+                System.out.println(value);
+                populationValue.setText(String.format("%.0f", new_val));
+            }});
+        populationValue.setLayoutX(populationSlider.getLayoutX()+150);populationValue.setLayoutY(400);
+        container.getChildren().addAll(populationSlider,populationValue,populationCaption);
+        setPopulation((int)populationSlider.getValue());
+
+    }
+
+    public void shootsInitialize(){
+        this.shots.clear();
         for (int i = 1; i <= probe; i++) {
             Ellipse ellipse = new Ellipse();
             ellipse.addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-                      DecimalFormat df2 = new DecimalFormat("#.##");
+                    DecimalFormat df2 = new DecimalFormat("#.##");
                     Ellipse ellipse = (Ellipse) mouseEvent.getSource();
                     Point point=shooter.getPointById(ellipse.getId());
                     info.setText("x:"+df2.format(point.getEllipse().getLayoutX())+" y:"+df2.format(point.getEllipse().getLayoutY())+" mark:"+point.getValue());
@@ -76,5 +124,13 @@ public class Controller   {
             ellipse.setId("shoot"+i);
             container.getChildren().add(ellipse);
         }
+        System.out.println(this.shots.size()+" shoots created");
+    }
+
+
+    public void initialize() {
+        this.PopulationSliderInitialize();
+        this.shootsInitialize();
+
     }
 }
