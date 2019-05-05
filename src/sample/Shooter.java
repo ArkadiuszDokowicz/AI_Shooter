@@ -15,7 +15,16 @@ public class Shooter extends geneticAlgorithm {
 
     }
 
+    public List<Point> getShots() {
+        return shots;
+    }
+
+    public void setShots(List<Point> shots) {
+        this.shots = shots;
+    }
+
     public void firstShootingRound(){
+        this.prepareToShooting();
         Random rand = new Random();
         double rangeMin=0;
         double rangeMax=400;
@@ -26,13 +35,18 @@ public class Shooter extends geneticAlgorithm {
            // System.out.println(randomY);
             EllipseService.setPosition(shot.getEllipse(), randomX, randomY, 3, 3);
         }
-    }
-
-    public void nextShootingRound(){
         this.checkTheResults();
+        this.Selection(this.shots);
         this.setParents(this.shots);
+        this.readResults();//it prints to console only
+    }
+    public void nextShootingRound(){
         this.crossover(this.shots);
         this.mutation(this.shots);
+        this.checkTheResults();
+        this.Selection(this.shots);
+        this.setParents(this.shots);
+        this.readResults();//it prints to console only
     }
     public void checkTheResults(){
     shield.rateShots(shots);

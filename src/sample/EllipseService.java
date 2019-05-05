@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 
 public class EllipseService  {
@@ -15,5 +16,9 @@ public class EllipseService  {
         obj.setLayoutY(layoutY);
         obj.setRadiusX(RadiusX);
         obj.setRadiusY(RadiusY);
+    }
+    static public void setColor(Ellipse obj, Color color){
+
+        obj.setFill(color);
     }
 }

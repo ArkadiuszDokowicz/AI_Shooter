@@ -5,16 +5,19 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Ellipse;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -23,6 +26,8 @@ public class Controller   {
     private static int probe =100;
 
 
+    @FXML
+    private Button button1;
     @FXML
     private AnchorPane container;
     @FXML
@@ -37,32 +42,36 @@ public class Controller   {
 
 
     public void shootingButton(ActionEvent event){
+        this.info.setText("");
         generationCounter++;
         this.label.setText("Generation :"+this.generationCounter);
         if(firstShootingRound==true){
-            shooter.prepareToShooting();
+            this.button1.setText("Next Generation");
             shooter.firstShootingRound();
-            shooter.checkTheResults();
-            shooter.readResults();
             firstShootingRound=false;
         }
         else{
-            shooter.Selection(this.shots);
             shooter.nextShootingRound();
-            shooter.readResults();
-
         }
     }
 
     public void shootingButton2(ActionEvent event) {
+        this.restartShooting();
+
+    }
+
+    private void restartShooting(){
+        this.button1.setText("First Generation");
         this.generationCounter=0;
         this.label.setText("Generation :"+this.generationCounter);
         for( Point shot:shots) {
             EllipseService.hidePoint(shot.getEllipse());
+            EllipseService.setPosition(shot.getEllipse(),0,0,shot.getEllipse().getRadiusX(),shot.getEllipse().getRadiusX());
+            EllipseService.setColor(shot.getEllipse(), Color.BLACK);
             firstShootingRound=true;
+            this.info.setText("");
         }
     }
-
     private void setPopulation(int value){
         this.probe=value;
         System.out.println(this.probe);
@@ -84,7 +93,9 @@ public class Controller   {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 setPopulation((int)populationSlider.getValue());
+                restartShooting();
                 shootsInitialize();
+
             }
         });
 
@@ -116,8 +127,8 @@ public class Controller   {
                     DecimalFormat df2 = new DecimalFormat("#.##");
                     Ellipse ellipse = (Ellipse) mouseEvent.getSource();
                     Point point=shooter.getPointById(ellipse.getId());
-                    info.setText("x:"+df2.format(point.getEllipse().getLayoutX())+" y:"+df2.format(point.getEllipse().getLayoutY())+" mark:"+point.getValue());
-
+                    info.setText(point.toString());
+                    info.appendText("\nx:"+df2.format(point.getEllipse().getLayoutX())+" y:"+df2.format(point.getEllipse().getLayoutY())+" mark:"+point.getValue());
                 }
             });
             shots.add(new Point("shoot"+i,ellipse,0));
@@ -125,12 +136,14 @@ public class Controller   {
             container.getChildren().add(ellipse);
         }
         System.out.println(this.shots.size()+" shoots created");
+        shooter.setShots(shots);
+
     }
 
 
     public void initialize() {
         this.PopulationSliderInitialize();
         this.shootsInitialize();
-
+        this.button1.setText("First Generation");
     }
 }

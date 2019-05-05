@@ -55,14 +55,16 @@ public class geneticAlgorithm {
     }
 
     protected void setParents(List<Point>shoots){
-
-
+        this.parents.clear();
             for(int i=0;i<this.tolerance;i++) {
                 Point p = shoots.get(i);
                 //if(p.getValue()!=0){
                     this.parents.add(p);
-                    p.getEllipse().setFill(Color.ALICEBLUE);
+                    EllipseService.setColor(p.getEllipse(),Color.ALICEBLUE);
                 //}
+            }
+            for(int i=this.tolerance;i<shoots.size();i++){
+                EllipseService.setColor(shoots.get(i).getEllipse(),Color.BLACK);
             }
     }
 
@@ -73,7 +75,7 @@ public class geneticAlgorithm {
         int max=this.parents.size()-1;
         int randomParentIndex1  =random.nextInt(max - min + 1) + min;
         int randomParentIndex2  =random.nextInt(max - min + 1) + min;
-        System.out.println(tolerance);
+        //System.out.println(tolerance);
         double parentGenotypeX,parentGenotypeY;
         parentGenotypeX=this.parents.get(randomParentIndex1).getEllipse().getLayoutX();
         parentGenotypeY=this.parents.get(randomParentIndex2).getEllipse().getLayoutY();
