@@ -1,5 +1,7 @@
 package sample;
 
+import javafx.scene.paint.Color;
+
 import java.util.*;
 
 public class geneticAlgorithm {
@@ -53,11 +55,16 @@ public class geneticAlgorithm {
     }
 
     protected void setParents(List<Point>shoots){
-
-
+        this.parents.clear();
             for(int i=0;i<this.tolerance;i++) {
                 Point p = shoots.get(i);
-                this.parents.add(p);
+                //if(p.getValue()!=0){
+                    this.parents.add(p);
+                    EllipseService.setColor(p.getEllipse(),Color.ALICEBLUE);
+                //}
+            }
+            for(int i=this.tolerance;i<shoots.size();i++){
+                EllipseService.setColor(shoots.get(i).getEllipse(),Color.BLACK);
             }
     }
 
@@ -65,10 +72,10 @@ public class geneticAlgorithm {
     private List<Double> getRandomGenotype(){
         Random random = new Random();
         int min=0;
-        int max=tolerance-1;
+        int max=this.parents.size()-1;
         int randomParentIndex1  =random.nextInt(max - min + 1) + min;
         int randomParentIndex2  =random.nextInt(max - min + 1) + min;
-        System.out.println(tolerance);
+        //System.out.println(tolerance);
         double parentGenotypeX,parentGenotypeY;
         parentGenotypeX=this.parents.get(randomParentIndex1).getEllipse().getLayoutX();
         parentGenotypeY=this.parents.get(randomParentIndex2).getEllipse().getLayoutY();
@@ -94,19 +101,22 @@ public class geneticAlgorithm {
         int max=1;
         double x = 0,y=0,mutX=0,mutY=0;
         for(Point p: shoots){
+            if(p.getValue()!=10){
             if((random.nextInt(max - min + 1) + min)==1) {
-                x = p.getEllipse().getLayoutX();
-                y = p.getEllipse().getLayoutY();
-                if ((random.nextInt(max - min + 1) + min) == 1) {
-                    mutX = x * ((this.mutation + 100) / 100);
-                    mutY = y * ((this.mutation + 100) / 100);
-                } else {
-                    mutX = x * ((100 - this.mutation) / 100);
-                    mutY = y * ((100 - this.mutation) / 100);
+                    x = p.getEllipse().getLayoutX();
+                    y = p.getEllipse().getLayoutY();
 
+                    if ((random.nextInt(max - min + 1) + min) == 1) {
+                        mutX = x * ((this.mutation + 100) / 100);
+                        mutY = y * ((this.mutation + 100) / 100);
+                    } else {
+                        mutX = x * ((100 - this.mutation) / 100);
+                        mutY = y * ((100 - this.mutation) / 100);
+
+                    }
+                p.getEllipse().setLayoutX(mutX);
+                p.getEllipse().setLayoutY(mutY);
                 }
-            p.getEllipse().setLayoutX(mutX);
-            p.getEllipse().setLayoutY(mutY);
             }
         }
 
